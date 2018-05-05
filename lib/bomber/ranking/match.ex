@@ -3,7 +3,7 @@ defmodule Bomber.Ranking.Match do
   import Ecto.Changeset
   alias Bomber.Ranking.MatchPlay
   alias Bomber.Ranking.Player
-  alias Bomber
+  alias Bomber.Repo
   import VictoryType
 
   schema "matches" do
@@ -24,14 +24,17 @@ defmodule Bomber.Ranking.Match do
     |> validate_required([:date, :victory_type])
   end
 
-  def top_three() do
+  def top_three do
+
     query = """
-      select winner_id, count(m.) as count
-      from matches m
+      select winner_id, count(*) as count
+      from matches
       group by winner_id
       order by count desc
       limit 3;
     """
-    Ecto.Adapters.SQL.query!(Repo, query)
+    result = Ecto.Adapters.SQL.query(Repo, query)
+
+
   end
 end

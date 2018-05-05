@@ -51,8 +51,8 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :bomber, Bomber.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "d0zero",
-  password: "",
+  username: "roga",
+  password: "roga",
   database: "bomber_dev",
   hostname: "localhost",
   pool_size: 10
