@@ -39,4 +39,10 @@ defmodule BomberWeb.MatchController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def last_match(conn, _params) do
+    match = Ranking.last_match!()
+    render(conn,"show.json", match: match)
+  end
+
 end

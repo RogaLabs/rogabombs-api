@@ -200,6 +200,14 @@ defmodule Bomber.Ranking do
     Match.changeset(match, %{})
   end
 
+  def last_match!() do
+   query = from( m in Match,
+           order_by: [desc: m.date, desc: m.id],
+           limit: 1,
+           preload: [:winner, matches_plays: [:player]])
+   Repo.one!(query)
+  end
+
   alias Bomber.Ranking.MatchPlay
 
   @doc """

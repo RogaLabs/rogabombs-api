@@ -25,5 +25,6 @@ defmodule BomberWeb.Router do
     resources "/players", PlayerController, except: [:new, :edit]
     resources "/matches", MatchController, except: [:new, :edit]
     resources "/matches_plays", MatchPlayController, except: [:new, :edit]
+    get "/last_match", MatchController, :last_match
   end
 end
