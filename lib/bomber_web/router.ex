@@ -23,5 +23,7 @@ defmodule BomberWeb.Router do
   scope "/api", BomberWeb do
     pipe_through :api
     resources "/players", PlayerController, except: [:new, :edit]
+    resources "/matches", MatchController, except: [:new, :edit]
+    resources "/matches_plays", MatchPlayController, except: [:new, :edit]
   end
 end

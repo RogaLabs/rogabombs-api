@@ -101,4 +101,196 @@ defmodule Bomber.Ranking do
   def change_player(%Player{} = player) do
     Player.changeset(player, %{})
   end
+
+  alias Bomber.Ranking.Match
+
+  @doc """
+  Returns the list of matches.
+
+  ## Examples
+
+      iex> list_matches()
+      [%Match{}, ...]
+
+  """
+  def list_matches do
+    Repo.all(Match)
+  end
+
+  @doc """
+  Gets a single match.
+
+  Raises `Ecto.NoResultsError` if the Match does not exist.
+
+  ## Examples
+
+      iex> get_match!(123)
+      %Match{}
+
+      iex> get_match!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_match!(id), do: Repo.get!(Match, id)
+
+  @doc """
+  Creates a match.
+
+  ## Examples
+
+      iex> create_match(%{field: value})
+      {:ok, %Match{}}
+
+      iex> create_match(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_match(attrs \\ %{}) do
+    %Match{}
+    |> Match.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a match.
+
+  ## Examples
+
+      iex> update_match(match, %{field: new_value})
+      {:ok, %Match{}}
+
+      iex> update_match(match, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_match(%Match{} = match, attrs) do
+    match
+    |> Match.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Match.
+
+  ## Examples
+
+      iex> delete_match(match)
+      {:ok, %Match{}}
+
+      iex> delete_match(match)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_match(%Match{} = match) do
+    Repo.delete(match)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking match changes.
+
+  ## Examples
+
+      iex> change_match(match)
+      %Ecto.Changeset{source: %Match{}}
+
+  """
+  def change_match(%Match{} = match) do
+    Match.changeset(match, %{})
+  end
+
+  alias Bomber.Ranking.MatchPlay
+
+  @doc """
+  Returns the list of matches_plays.
+
+  ## Examples
+
+      iex> list_matches_plays()
+      [%MatchPlay{}, ...]
+
+  """
+  def list_matches_plays do
+    Repo.all(MatchPlay)
+  end
+
+  @doc """
+  Gets a single match_play.
+
+  Raises `Ecto.NoResultsError` if the Match play does not exist.
+
+  ## Examples
+
+      iex> get_match_play!(123)
+      %MatchPlay{}
+
+      iex> get_match_play!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_match_play!(id), do: Repo.get!(MatchPlay, id)
+
+  @doc """
+  Creates a match_play.
+
+  ## Examples
+
+      iex> create_match_play(%{field: value})
+      {:ok, %MatchPlay{}}
+
+      iex> create_match_play(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_match_play(attrs \\ %{}) do
+    %MatchPlay{}
+    |> MatchPlay.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a match_play.
+
+  ## Examples
+
+      iex> update_match_play(match_play, %{field: new_value})
+      {:ok, %MatchPlay{}}
+
+      iex> update_match_play(match_play, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_match_play(%MatchPlay{} = match_play, attrs) do
+    match_play
+    |> MatchPlay.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a MatchPlay.
+
+  ## Examples
+
+      iex> delete_match_play(match_play)
+      {:ok, %MatchPlay{}}
+
+      iex> delete_match_play(match_play)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_match_play(%MatchPlay{} = match_play) do
+    Repo.delete(match_play)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking match_play changes.
+
+  ## Examples
+
+      iex> change_match_play(match_play)
+      %Ecto.Changeset{source: %MatchPlay{}}
+
+  """
+  def change_match_play(%MatchPlay{} = match_play) do
+    MatchPlay.changeset(match_play, %{})
+  end
 end

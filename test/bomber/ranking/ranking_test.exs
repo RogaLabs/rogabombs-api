@@ -62,4 +62,126 @@ defmodule Bomber.RankingTest do
       assert %Ecto.Changeset{} = Ranking.change_player(player)
     end
   end
+
+  describe "matches" do
+    alias Bomber.Ranking.Match
+
+    @valid_attrs %{date: "2010-04-17 14:00:00.000000Z", victory_type: 42}
+    @update_attrs %{date: "2011-05-18 15:01:01.000000Z", victory_type: 43}
+    @invalid_attrs %{date: nil, victory_type: nil}
+
+    def match_fixture(attrs \\ %{}) do
+      {:ok, match} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Ranking.create_match()
+
+      match
+    end
+
+    test "list_matches/0 returns all matches" do
+      match = match_fixture()
+      assert Ranking.list_matches() == [match]
+    end
+
+    test "get_match!/1 returns the match with given id" do
+      match = match_fixture()
+      assert Ranking.get_match!(match.id) == match
+    end
+
+    test "create_match/1 with valid data creates a match" do
+      assert {:ok, %Match{} = match} = Ranking.create_match(@valid_attrs)
+      assert match.date == DateTime.from_naive!(~N[2010-04-17 14:00:00.000000Z], "Etc/UTC")
+      assert match.victory_type == 42
+    end
+
+    test "create_match/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Ranking.create_match(@invalid_attrs)
+    end
+
+    test "update_match/2 with valid data updates the match" do
+      match = match_fixture()
+      assert {:ok, match} = Ranking.update_match(match, @update_attrs)
+      assert %Match{} = match
+      assert match.date == DateTime.from_naive!(~N[2011-05-18 15:01:01.000000Z], "Etc/UTC")
+      assert match.victory_type == 43
+    end
+
+    test "update_match/2 with invalid data returns error changeset" do
+      match = match_fixture()
+      assert {:error, %Ecto.Changeset{}} = Ranking.update_match(match, @invalid_attrs)
+      assert match == Ranking.get_match!(match.id)
+    end
+
+    test "delete_match/1 deletes the match" do
+      match = match_fixture()
+      assert {:ok, %Match{}} = Ranking.delete_match(match)
+      assert_raise Ecto.NoResultsError, fn -> Ranking.get_match!(match.id) end
+    end
+
+    test "change_match/1 returns a match changeset" do
+      match = match_fixture()
+      assert %Ecto.Changeset{} = Ranking.change_match(match)
+    end
+  end
+
+  describe "matches_plays" do
+    alias Bomber.Ranking.MatchPlay
+
+    @valid_attrs %{score: 42}
+    @update_attrs %{score: 43}
+    @invalid_attrs %{score: nil}
+
+    def match_play_fixture(attrs \\ %{}) do
+      {:ok, match_play} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Ranking.create_match_play()
+
+      match_play
+    end
+
+    test "list_matches_plays/0 returns all matches_plays" do
+      match_play = match_play_fixture()
+      assert Ranking.list_matches_plays() == [match_play]
+    end
+
+    test "get_match_play!/1 returns the match_play with given id" do
+      match_play = match_play_fixture()
+      assert Ranking.get_match_play!(match_play.id) == match_play
+    end
+
+    test "create_match_play/1 with valid data creates a match_play" do
+      assert {:ok, %MatchPlay{} = match_play} = Ranking.create_match_play(@valid_attrs)
+      assert match_play.score == 42
+    end
+
+    test "create_match_play/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Ranking.create_match_play(@invalid_attrs)
+    end
+
+    test "update_match_play/2 with valid data updates the match_play" do
+      match_play = match_play_fixture()
+      assert {:ok, match_play} = Ranking.update_match_play(match_play, @update_attrs)
+      assert %MatchPlay{} = match_play
+      assert match_play.score == 43
+    end
+
+    test "update_match_play/2 with invalid data returns error changeset" do
+      match_play = match_play_fixture()
+      assert {:error, %Ecto.Changeset{}} = Ranking.update_match_play(match_play, @invalid_attrs)
+      assert match_play == Ranking.get_match_play!(match_play.id)
+    end
+
+    test "delete_match_play/1 deletes the match_play" do
+      match_play = match_play_fixture()
+      assert {:ok, %MatchPlay{}} = Ranking.delete_match_play(match_play)
+      assert_raise Ecto.NoResultsError, fn -> Ranking.get_match_play!(match_play.id) end
+    end
+
+    test "change_match_play/1 returns a match_play changeset" do
+      match_play = match_play_fixture()
+      assert %Ecto.Changeset{} = Ranking.change_match_play(match_play)
+    end
+  end
 end
