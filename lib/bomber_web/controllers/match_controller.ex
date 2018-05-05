@@ -39,4 +39,10 @@ defmodule BomberWeb.MatchController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def hall_fama(conn, _params) do
+    p = Ranking.top_three()
+    IO.inspect(p)
+  end
+
 end
