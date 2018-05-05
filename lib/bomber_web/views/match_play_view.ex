@@ -1,6 +1,6 @@
 defmodule BomberWeb.MatchPlayView do
   use BomberWeb, :view
-  alias BomberWeb.MatchPlayView
+  alias BomberWeb.{MatchPlayView,PlayerView}
 
   def render("index.json", %{matches_plays: matches_plays}) do
     %{data: render_many(matches_plays, MatchPlayView, "match_play.json")}
@@ -12,6 +12,7 @@ defmodule BomberWeb.MatchPlayView do
 
   def render("match_play.json", %{match_play: match_play}) do
     %{id: match_play.id,
-      score: match_play.score}
+      score: match_play.score,
+      player: render_one(match_play.player, PlayerView, "player.json")}
   end
 end

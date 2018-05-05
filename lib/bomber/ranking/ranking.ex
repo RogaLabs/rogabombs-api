@@ -115,6 +115,8 @@ defmodule Bomber.Ranking do
   """
   def list_matches do
     Repo.all(Match)
+    |> Repo.preload(:winner)
+    |> Repo.preload(matches_plays: [:player])
   end
 
   @doc """
