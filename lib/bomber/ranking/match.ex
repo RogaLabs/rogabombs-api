@@ -24,6 +24,11 @@ defmodule Bomber.Ranking.Match do
     |> validate_required([:date, :victory_type])
   end
 
+  def push_array(array, value) do
+    array
+    |> [value]
+  end
+
   def top_three do
 
     query = """
@@ -31,10 +36,21 @@ defmodule Bomber.Ranking.Match do
       from matches
       group by winner_id
       order by count desc
-      limit 3;
     """
-    result = Ecto.Adapters.SQL.query(Repo, query)
-
-
+    ret = []
+    lastwins = 0
+    {:ok, %Postgrex.Result{rows: rows}} = Ecto.Adapters.SQL.query(Repo, query)
+    rows
+    |> Enum.with_index
+    |> Enum.map(fn({[player, wins], i}) ->
+      if i <= 2 || (i > 3 && wins == lastwins) do
+        ret = push_array(ret, player)
+        IO.inspect(ret)
+        lastwins = wins
+      end
+    end)
+    IO.inspect("+++++++++++")
+    IO.inspect(ret)
+    IO.inspect("+++++++++++")
   end
 end
