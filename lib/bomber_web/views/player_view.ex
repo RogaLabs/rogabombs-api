@@ -14,4 +14,15 @@ defmodule BomberWeb.PlayerView do
     %{id: player.id,
       name: player.name}
   end
+
+  def render("hall_of_fame.json", %{players: players}) do
+    Enum.map(players, fn( [ player, wins ] ) ->
+      %{
+        id: player.id,
+        name: player.name,
+        matches_plays_size: length(player.matches_plays),
+        wins: wins
+      }
+    end)
+  end
 end

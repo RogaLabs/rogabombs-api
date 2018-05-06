@@ -3,6 +3,7 @@ defmodule Bomber.Ranking.Match do
   import Ecto.Changeset
   alias Bomber.Ranking.MatchPlay
   alias Bomber.Ranking.Player
+  alias Bomber.Repo
   import VictoryType
 
   schema "matches" do
@@ -19,7 +20,9 @@ defmodule Bomber.Ranking.Match do
 
     match
     |> cast(attrs, [:date, :victory_type])
+    |> put_assoc(:winner, Repo.get_by(Player, id: attrs["winner"]))
     |> cast_assoc(:matches_plays)
     |> validate_required([:date, :victory_type])
   end
+
 end

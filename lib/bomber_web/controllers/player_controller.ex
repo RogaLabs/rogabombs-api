@@ -39,4 +39,10 @@ defmodule BomberWeb.PlayerController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def hall_of_fame(conn, _params) do
+    players = Player.top_three()
+    conn
+    |> render("hall_of_fame.json", players: players)
+  end
 end
