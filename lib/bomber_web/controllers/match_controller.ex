@@ -40,8 +40,4 @@ defmodule BomberWeb.MatchController do
     end
   end
 
-  def hall_fama(conn, _params) do
-    p = Match.top_three()
-  end
-
 end
