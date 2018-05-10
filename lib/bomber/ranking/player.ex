@@ -45,4 +45,29 @@ defmodule Bomber.Ranking.Player do
       [player, wins]
     end)
   end
+
+  def down_three do
+
+    today = DateTime.utc_now()
+    query = from(m in Match,
+                 select: %{winner_id: m.winner_id, count: count("*")},
+                 where: fragment("Extract(month from ?)", m.date) == ^today.month,
+                 where: fragment("Extract(year from ?)", m.date) == ^today.year,
+                 group_by: [m.winner_id],
+                 order_by: [asc: count("*")])
+    Repo.all(query)
+    |> Enum.with_index
+    |> Enum.map( fn({ %{winner_id: player, count: wins}, i }) ->
+      if i <= 2 do
+        [player, wins]
+      end
+    end)
+    |> Enum.take(3)
+    |> Enum.map( fn( [id, wins] ) ->
+      player = Player
+               |> Repo.get(id)
+               |> Repo.preload(:matches_plays)
+      [player, wins]
+    end)
+  end
 end

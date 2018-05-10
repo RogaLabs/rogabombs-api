@@ -43,6 +43,12 @@ defmodule BomberWeb.PlayerController do
   def hall_of_fame(conn, _params) do
     players = Player.top_three()
     conn
-    |> render("hall_of_fame.json", players: players)
+    |> render("hall.json", players: players)
+  end
+
+  def hall_of_shame(conn, _params) do
+    players = Player.down_three()
+    conn
+    |> render("hall.json", players: players)
   end
 end
