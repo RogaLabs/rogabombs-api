@@ -30,7 +30,7 @@ defmodule Bomber.Ranking.Match do
 
   defp validate_four_players(changeset) do
     matches_plays = get_field(changeset,:matches_plays)
-    changeset = cond do
+    cond do
     length(matches_plays) < 4 ->
       add_error(changeset, :matches_plays, "Minimum number of players is 4")
     length(matches_plays) > 5 ->
@@ -50,10 +50,10 @@ defmodule Bomber.Ranking.Match do
 
     winners = Enum.filter(winners, fn(x) -> x != nil end)
 
-    changeset = cond do
+    cond do
       length(winners) == 1 ->
         winner_id = List.first(winners)
-        changeset = change(changeset,%{winner_id: winner_id})
+        change(changeset,%{winner_id: winner_id})
       length(winners) < 1 ->
         add_error(changeset, :winner, "Match require a winner")
       length(winners) > 1 ->
@@ -69,11 +69,14 @@ defmodule Bomber.Ranking.Match do
     |> Enum.map(fn(x) -> x.score end)
     |> Enum.reduce(0,fn(x, acc) -> x + acc end)
 
-    if total_points_match == 3 do
-      victory_type = get_field(changeset,:victory_type)
-      changeset = change(changeset,%{victory_type: victory_type + 2})
+    case total_points_match do
+     3 ->
+       victory_type = get_field(changeset,:victory_type)
+       change(changeset,%{victory_type: victory_type + 2})
+     _ ->
+       changeset
     end
-    changeset
+
   end
 
 end

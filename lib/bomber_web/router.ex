@@ -24,7 +24,7 @@ defmodule BomberWeb.Router do
     pipe_through :api
     resources "/players", PlayerController, except: [:new, :edit]
     resources "/matches", MatchController, except: [:new, :edit]
-    resources "/matches_plays", MatchPlayController, except: [:new, :edit]
+    resources "/matches_plays", MatchPlayController, except: [:new, :edit, :delete, :update]
     get "/dashboard/fame", PlayerController, :hall_of_fame
     get "/dashboard/shame", PlayerController, :hall_of_shame
     get "/last_match", MatchController, :last_match

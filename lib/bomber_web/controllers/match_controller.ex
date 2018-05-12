@@ -3,7 +3,6 @@ defmodule BomberWeb.MatchController do
 
   alias Bomber.Ranking
   alias Bomber.Ranking.Match
-  alias Bomber.Repo
 
   action_fallback BomberWeb.FallbackController
 

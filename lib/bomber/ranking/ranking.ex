@@ -18,7 +18,7 @@ defmodule Bomber.Ranking do
 
   """
   def list_players do
-    players = Repo.all(Player)
+    Repo.all(Player)
     |> Repo.preload(:matches_plays)
     |> Enum.map(fn(player) ->
       wins = Enum.reduce(player.matches_plays,0, fn(match_play, acc) ->
