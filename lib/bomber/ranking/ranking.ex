@@ -18,8 +18,23 @@ defmodule Bomber.Ranking do
 
   """
   def list_players do
-    Repo.all(Player)
+    players = Repo.all(Player)
+    |> Repo.preload(:matches_plays)
+    |> Enum.map(fn(player) ->
+      wins = Enum.reduce(player.matches_plays,0, fn(match_play, acc) ->
+                        if match_play.score == 3 do
+                          acc + 1
+                        else
+                          acc
+                        end
+                      end
+                    )
+      matches_played = length(player.matches_plays)
+      %{player| wins: wins,matches_played: matches_played}
+    end
+    )
   end
+
 
   @doc """
   Gets a single player.

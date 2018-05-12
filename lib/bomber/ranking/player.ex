@@ -1,12 +1,16 @@
 defmodule Bomber.Ranking.Player do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
   alias Bomber.Ranking.MatchPlay
+  alias Bomber.Ranking.Match
   alias Bomber.Repo
   alias Bomber.Ranking.Player
 
   schema "players" do
     field :name, :string
+    field :wins, :integer, virtual: true
+    field :matches_played, :integer, virtual: true
     has_many :matches_plays, MatchPlay
 
     timestamps()
@@ -21,22 +25,35 @@ defmodule Bomber.Ranking.Player do
 
   def top_three do
 
-    query = """
-      select winner_id, count(*) as count
-      from matches
-      group by winner_id
-      order by count desc
-    """
-    {:ok, %Postgrex.Result{rows: rows}} = Ecto.Adapters.SQL.query(Repo, query)
-    rows
-    |> Enum.with_index
-    |> Enum.map( fn({ [player, wins], i }) ->
-      if i <= 2 do
-        [player, wins]
-      end
-    end)
+    today = DateTime.utc_now()
+    query = from(m in Match,
+                 select: %{winner_id: m.winner_id, count: count("*")},
+                 where: fragment("Extract(month from ?)", m.date) == ^today.month,
+                 where: fragment("Extract(year from ?)", m.date) == ^today.year,
+                 group_by: [m.winner_id],
+                 order_by: [desc: count("*")])
+    Repo.all(query)
     |> Enum.take(3)
-    |> Enum.map( fn( [id, wins] ) ->
+    |> Enum.map( fn( %{winner_id: id, count: wins} ) ->
+      player = Player
+               |> Repo.get(id)
+               |> Repo.preload(:matches_plays)
+      [player, wins]
+    end)
+  end
+
+  def down_three do
+
+    today = DateTime.utc_now()
+    query = from(m in Match,
+                 select: %{winner_id: m.winner_id, count: count("*")},
+                 where: fragment("Extract(month from ?)", m.date) == ^today.month,
+                 where: fragment("Extract(year from ?)", m.date) == ^today.year,
+                 group_by: [m.winner_id],
+                 order_by: [asc: count("*")])
+    Repo.all(query)
+    |> Enum.take(3)
+    |> Enum.map( fn(%{winner_id: id, count: wins}) ->
       player = Player
                |> Repo.get(id)
                |> Repo.preload(:matches_plays)
