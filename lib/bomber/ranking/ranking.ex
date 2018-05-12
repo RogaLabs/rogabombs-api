@@ -208,6 +208,12 @@ defmodule Bomber.Ranking do
    Repo.one!(query)
   end
 
+  def preload_match(match) do
+    match
+    |> Repo.preload(:winner)
+    |> Repo.preload(matches_plays: [:player])
+  end
+
   alias Bomber.Ranking.MatchPlay
 
   @doc """

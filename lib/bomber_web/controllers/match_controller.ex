@@ -14,7 +14,7 @@ defmodule BomberWeb.MatchController do
 
   def create(conn, %{"match" => match_params}) do
     with {:ok, %Match{} = match} <- Ranking.create_match(match_params) do
-      match = Repo.preload(match, matches_plays: :player)
+      match = Ranking.preload_match(match)
       conn
       |> put_status(:created)
       |> put_resp_header("location", match_path(conn, :show, match))
@@ -24,6 +24,7 @@ defmodule BomberWeb.MatchController do
 
   def show(conn, %{"id" => id}) do
     match = Ranking.get_match!(id)
+    match = Ranking.preload_match(match)
     render(conn, "show.json", match: match)
   end
 
@@ -31,6 +32,7 @@ defmodule BomberWeb.MatchController do
     match = Ranking.get_match!(id)
 
     with {:ok, %Match{} = match} <- Ranking.update_match(match, match_params) do
+      match = Ranking.preload_match(match)
       render(conn, "show.json", match: match)
     end
   end

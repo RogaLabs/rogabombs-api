@@ -23,6 +23,57 @@ defmodule Bomber.Ranking.Match do
     |> put_assoc(:winner, Repo.get_by(Player, id: attrs["winner"]))
     |> cast_assoc(:matches_plays)
     |> validate_required([:date, :victory_type])
+    |> validate_four_players # min of 4 players and max of 5 players
+    |> validate_and_set_winner # validate scores to define winner of match
+    |> validate_victory_type # validate flawless victory
+  end
+
+  defp validate_four_players(changeset) do
+    matches_plays = get_field(changeset,:matches_plays)
+    changeset = cond do
+    length(matches_plays) < 4 ->
+      add_error(changeset, :matches_plays, "Minimum number of players is 4")
+    length(matches_plays) > 5 ->
+      add_error(changeset, :matches_plays, "Maximum number of players is 5")
+    true ->
+      changeset
+    end
+  end
+
+  defp validate_and_set_winner(changeset) do
+    matches_plays = get_field(changeset,:matches_plays)
+    winners = for match_play <- matches_plays do
+      if (match_play.score == 3) do
+          match_play.player_id
+      end
+    end
+
+    winners = Enum.filter(winners, fn(x) -> x != nil end)
+
+    changeset = cond do
+      length(winners) == 1 ->
+        winner_id = List.first(winners)
+        changeset = change(changeset,%{winner_id: winner_id})
+      length(winners) < 1 ->
+        add_error(changeset, :winner, "Match require a winner")
+      length(winners) > 1 ->
+        add_error(changeset, :winner, "Match require just one winner")
+    end
+  end
+
+  defp validate_victory_type(changeset) do
+    matches_plays = get_field(changeset,:matches_plays)
+
+    total_points_match =
+    matches_plays
+    |> Enum.map(fn(x) -> x.score end)
+    |> Enum.reduce(0,fn(x, acc) -> x + acc end)
+
+    if total_points_match == 3 do
+      victory_type = get_field(changeset,:victory_type)
+      changeset = change(changeset,%{victory_type: victory_type + 2})
+    end
+    changeset
   end
 
 end
