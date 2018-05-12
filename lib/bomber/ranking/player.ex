@@ -7,6 +7,8 @@ defmodule Bomber.Ranking.Player do
 
   schema "players" do
     field :name, :string
+    field :wins, :integer, virtual: true
+    field :matches_played, :integer, virtual: true
     has_many :matches_plays, MatchPlay
 
     timestamps()
