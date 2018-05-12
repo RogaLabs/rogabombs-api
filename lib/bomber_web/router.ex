@@ -20,7 +20,11 @@ defmodule BomberWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", BomberWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", BomberWeb do
+    pipe_through :api
+    resources "/players", PlayerController, except: [:new, :edit]
+    resources "/matches", MatchController, except: [:new, :edit]
+    resources "/matches_plays", MatchPlayController, except: [:new, :edit]
+    get "/last_match", MatchController, :last_match
+  end
 end
