@@ -31,14 +31,8 @@ defmodule Bomber.Ranking.Player do
                  group_by: [m.winner_id],
                  order_by: [desc: count("*")])
     Repo.all(query)
-    |> Enum.with_index
-    |> Enum.map( fn({ %{winner_id: player, count: wins}, i }) ->
-      if i <= 2 do
-        [player, wins]
-      end
-    end)
     |> Enum.take(3)
-    |> Enum.map( fn( [id, wins] ) ->
+    |> Enum.map( fn( %{winner_id: id, count: wins} ) ->
       player = Player
                |> Repo.get(id)
                |> Repo.preload(:matches_plays)
@@ -56,14 +50,8 @@ defmodule Bomber.Ranking.Player do
                  group_by: [m.winner_id],
                  order_by: [asc: count("*")])
     Repo.all(query)
-    |> Enum.with_index
-    |> Enum.map( fn({ %{winner_id: player, count: wins}, i }) ->
-      if i <= 2 do
-        [player, wins]
-      end
-    end)
     |> Enum.take(3)
-    |> Enum.map( fn( [id, wins] ) ->
+    |> Enum.map( fn(%{winner_id: id, count: wins}) ->
       player = Player
                |> Repo.get(id)
                |> Repo.preload(:matches_plays)
