@@ -37,7 +37,8 @@ defmodule BomberWeb.Endpoint do
     store: :cookie,
     key: "_bomber_key",
     signing_salt: "XUOzP41I"
-
+    
+  plug CORSPlug, origin: ["*"]
   plug BomberWeb.Router
 
   @doc """
